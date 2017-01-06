@@ -1,0 +1,48 @@
+{% macro remove_table_border(s) %}
+  {{ s.replace('border="1"', '') | safe }}
+{% endmacro %}
+
+{% macro render_element(o, level=1) -%}
+{%- if o.element_type == 'block' -%}
+  {%- if o.title %}
+  <section class="content block-section">
+    <h{{level + 1}} class="text-uppercase text-center"{% if o.anchor %} id="{{ o.anchor }}"{% endif %}>
+      {{ o.title }}
+      <span class="back-to-top"><a href="#{{ toc_anchor }}">↵</a></span>
+    </h{{level + 1}}>
+    {% for c in o %}{{ render_element(c, level + 1) }}
+    {% endfor %}
+  </section>
+  {%- else %}
+  {% for c in o %}{{ render_element(c, level) }}
+  {% endfor %}
+  {%- endif %}
+{%- elif o.element_type == 'text' -%}
+  <p class="text-left"> {{ o.text }}</p>
+{%- elif o.element_type == 'internal_link' -%}
+  <a href="#{{ o.target }}">{{ o.text }}</a>
+{%- elif o.element_type == 'html' -%}
+  {{ o.source | safe }}
+{%- elif o.element_type == 'image' -%}
+  <figure><img class="img-thumbnail" src="{{ save_file(o) }}">
+    {% if o.title_or_filename %}
+      <figcaption>{{ o.title_or_filename }}</figcaption>
+    {% endif %}
+  </figure>
+{%- elif o.element_type == 'attachment' -%}
+  <blockquote>
+    <p><strong>Attachment:</strong> <a href="{{ save_file(o) }}">{{ o.title_or_filename }}</a></p>
+  </blockquote>
+{%- elif o.element_type == 'data_frame' -%}
+  <section class="content table-section">
+    {% if o.title %}
+      <h2 class="text-uppercase text-center">{{ o.title }}</h2>
+    {% endif %}
+    <div class="table-responsive">
+      {{ remove_table_border(o.df.to_html(classes="table")) | safe }}
+    </div>
+  </section>
+{%- else -%}
+  <h2 class="text-uppercase text-center">{{ o.title }}</h2>
+{%- endif -%}
+{%- endmacro %}

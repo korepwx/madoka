@@ -1,0 +1,15 @@
+{% macro render_toc_node(node) -%}
+  {% if node.anchor %}<a href="#{{ node.anchor }}">{{ node.title }}</a>{% else %}{{ node.title }}{% endif %}
+  {%- if node %}<ul class="toc-list">{% for c in node %}<li class="toc-item">{{ render_toc_node(c) }}</li>{% endfor %}</ul>{% endif %}
+{%- endmacro %}
+
+{% macro render_toc(toc) -%}
+  {% if toc -%}
+  <section class="content block-section toc">
+    <h2 class="text-uppercase text-center" id="{{ toc_anchor }}">Table of Contents</h2>
+    <div class="toc-root">
+      <ul class="toc-list">{% for c in toc %}<li class="toc-item">{{ render_toc_node(c) }}</li>{% endfor %}</ul>
+    </div>
+  </section>
+  {%- endif %}
+{%- endmacro %}

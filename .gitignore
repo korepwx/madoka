@@ -1,0 +1,10 @@
+/.idea
+/debug.py
+/madoka.conf
+/anomaly.conf
+*.so
+*.dll
+*.pyc
+*.iml
+*.*~
+.DS_Store

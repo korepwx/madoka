@@ -1,0 +1,63 @@
+{% from "html/elements.html" import render_element with context -%}
+{% from "html/toc.html" import render_toc with context -%}
+{% set toolkit_title = 'Madoka ML Toolkit' -%}
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ root.title }} - {{ toolkit_title }}</title>
+
+  <link rel="stylesheet" type="text/css" href="{{ save_file('assets/bootstrap/css/bootstrap.min.css') }}" />
+  <link rel="stylesheet" type="text/css" href="{{ save_file('assets/fonts/ionicons.min.css') }}" />
+  <link rel="stylesheet" type="text/css" href="{{ save_file('assets/css/user.css') }}" />
+  <link rel="stylesheet" type="text/css" href="{{ save_file('assets/css/Footer-Basic.css') }}" />
+  <link rel="stylesheet" type="text/css" href="{{ save_file('assets/fonts/ionicons.woff') }}" />
+  <link rel="stylesheet" type="text/css" href="{{ save_file('assets/fonts/ionicons.ttf') }}" />
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>{{ root.title }}</h1>
+      <p class="lead text-center text-muted">{{ toolkit_title }}</p>
+      <section class="content">
+        {% if root.exp_id -%}
+        <ol class="breadcrumb" style="background:transparent;">
+          {% for s in root.exp_id.split('/') -%}
+            {% if s %}
+              {%- if loop.last -%}
+                <li class="breadcrumb-item active">{{ s }}</li>
+              {%- else -%}
+                <li class="breadcrumb-item"><a href="javascript: void(0);">{{ s }}</a></li>
+              {%- endif -%}
+            {% endif %}
+          {% endfor %}
+          {% if log_path -%}
+            <li class="breadcrumb-item"><a href="{{ log_path }}">logs</a></li>
+          {%- endif %}
+        </ol>
+        {%- endif %}
+      </section>
+    </header>
+    <hr>
+    <!-- begin table of contents -->
+    {{ render_toc(toc) }}
+
+    <!-- begin report body -->
+    {% for c in root %}
+      {{ render_element(c) }}
+    {% endfor %}
+    <hr>
+  </div>
+  <div class="footer-basic">
+    <footer>
+      <p class="copyright">Shiro &#38; ipwx &copy; 2016</p>
+    </footer>
+  </div>
+  <script src="{{ save_file('assets/js/jquery.min.js') }}"></script>
+  <script src="{{ save_file('assets/bootstrap/js/bootstrap.min.js') }}"></script>
+</body>
+
+</html>
